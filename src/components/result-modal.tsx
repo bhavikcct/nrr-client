@@ -12,6 +12,8 @@ type Props = {
       maxOvers?: number;
       revisedNRRMin: number;
       revisedNRRMax: number;
+      impossible?: boolean;
+      message?: string;
     };
   };
   data: {
@@ -22,24 +24,8 @@ type Props = {
   };
 };
 
-/**
- * ResultModal is a component that displays the calculated Net Run Rate (NRR) 
- * result of a cricket match in a modal dialog. It presents information about 
- * the required runs and overs to achieve a desired NRR, based on the current 
- * match data and result mode (batting or bowling). The modal can be closed 
- * using a provided callback function.
- *
- * Props:
- * - isOpen: Boolean indicating if the modal should be displayed.
- * - onClose: Function to call when the modal is closed.
- * - result: Object containing the mode of play ('bat' or 'bowl') and answer 
- *   details, including required runs, overs, and revised NRR range.
- * - data: Object containing match details such as the teams involved, 
- *   match overs, and runs scored.
- */
-
 export default function ResultModal({ isOpen, onClose, result, data }: Props) {
-  if (!isOpen || !result || !result.answer) return null; // Added check
+  if (!isOpen || !result || !result.answer) return null;
 
   const { yourTeam, oppositionTeam, matchOvers, runsScored } = data;
   const { mode, answer } = result;
@@ -50,6 +36,8 @@ export default function ResultModal({ isOpen, onClose, result, data }: Props) {
     maxOvers,
     revisedNRRMin,
     revisedNRRMax,
+    impossible,
+    message,
   } = answer;
 
   return ReactDOM.createPortal(
@@ -60,7 +48,9 @@ export default function ResultModal({ isOpen, onClose, result, data }: Props) {
         </h2>
 
         <div className="space-y-5 text-sm text-gray-700 leading-relaxed">
-          {mode === "bat" ? (
+          {impossible ? (
+            <p>{message}</p>
+          ) : mode === "bat" ? (
             <div>
               <strong>Q-1a:</strong> If <strong>{yourTeam}</strong> score{" "}
               <strong>{runsScored} runs</strong> in{" "}
