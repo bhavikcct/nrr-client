@@ -4,7 +4,7 @@ This is a client-side application for calculating the Net Run Rate (NRR) impact 
 
 ## Development
 
-1. Clone the repository using `git clone https://github.com/Bhavik567890/nrr-client.git`
+1. Clone the repository using `git clone https://github.com/bhavikcct/nrr-client.git`
 2. Install the dependencies using `npm install`
 3. Start the server using `npm  run dev`
 
