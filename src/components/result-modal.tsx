@@ -52,7 +52,7 @@ export default function ResultModal({ isOpen, onClose, result, data }: Props) {
             <p>{message}</p>
           ) : mode === "bat" ? (
             <div>
-              <strong>Q-1a:</strong> If <strong>{yourTeam}</strong> score{" "}
+               If <strong>{yourTeam}</strong> score{" "}
               <strong>{runsScored} runs</strong> in{" "}
               <strong>{matchOvers} overs</strong>, <strong>{yourTeam}</strong>{" "}
               need to restrict <strong>{oppositionTeam}</strong> between{" "}
@@ -69,7 +69,7 @@ export default function ResultModal({ isOpen, onClose, result, data }: Props) {
             </div>
           ) : (
             <div>
-              <strong>Q-1b:</strong> <strong>{yourTeam}</strong> need to chase{" "}
+              <strong>{yourTeam}</strong> need to chase{" "}
               <strong>{runsScored} runs</strong> between{" "}
               <strong>
                 {minOvers} to {maxOvers} overs
