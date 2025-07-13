@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { matchSchema, type MatchSchemaData } from "../validation/nrrform-validation";
+import {
+  matchSchema,
+  type MatchSchemaData,
+} from "../validation/nrrform-validation";
 import { matchOptions } from "../utils/util";
 import { calculateNRR } from "../services/nrr.service";
 import ResultModal from "./result-modal";
@@ -18,9 +21,13 @@ import ResultModal from "./result-modal";
  *   displays the result in a modal dialog when submitted.
  */
 export default function NRRForm() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [resultData, setResultData] = useState(null);
-  const [submittedData, setSubmittedData] = useState<MatchSchemaData | null>(null);
+
+  const [submittedData, setSubmittedData] = useState<MatchSchemaData | null>(
+    null
+  );
 
   const {
     register,
@@ -32,16 +39,22 @@ export default function NRRForm() {
 
   const onSubmit = async (data: MatchSchemaData) => {
     try {
+      setIsLoading(true);
       const response = await calculateNRR(data);
+      setIsLoading(false);
       setResultData(response);
       setSubmittedData(data);
       setModalOpen(true);
     } catch (error: any) {
-      const message = error.response?.data?.error ?? error.message ?? "Error calculating NRR";
+      const message =
+      error.response?.data?.error ?? error.message ?? "Error calculating NRR";
       alert(`Error: ${message}`);
+      setIsLoading(false);
+
+    } finally {
+      setIsLoading(false);
     }
   };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -52,80 +65,133 @@ export default function NRRForm() {
           {/* --- Team Selection --- */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Your Team</label>
-              <select {...register("yourTeam")} className="w-full border p-2 rounded-md">
+              <label className="block text-sm font-medium mb-1">
+                Your Team
+              </label>
+              <select
+                {...register("yourTeam")}
+                className="w-full border p-2 rounded-md"
+              >
                 <option value="">Select Team</option>
                 {matchOptions.map((team) => (
-                  <option key={team} value={team}>{team}</option>
+                  <option key={team} value={team}>
+                    {team}
+                  </option>
                 ))}
               </select>
-              {errors.yourTeam && <p className="text-red-500 text-sm">{errors.yourTeam.message}</p>}
+              {errors.yourTeam && (
+                <p className="text-red-500 text-sm">
+                  {errors.yourTeam.message}
+                </p>
+              )}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Opponent Team</label>
-              <select {...register("oppositionTeam")} className="w-full border p-2 rounded-md">
+              <label className="block text-sm font-medium mb-1">
+                Opponent Team
+              </label>
+              <select
+                {...register("oppositionTeam")}
+                className="w-full border p-2 rounded-md"
+              >
                 <option value="">Select Team</option>
                 {matchOptions.map((team) => (
-                  <option key={team} value={team}>{team}</option>
+                  <option key={team} value={team}>
+                    {team}
+                  </option>
                 ))}
               </select>
-              {errors.oppositionTeam && <p className="text-red-500 text-sm">{errors.oppositionTeam.message}</p>}
+              {errors.oppositionTeam && (
+                <p className="text-red-500 text-sm">
+                  {errors.oppositionTeam.message}
+                </p>
+              )}
             </div>
           </div>
 
           {/* --- Match Details --- */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Match Overs</label>
+              <label className="block text-sm font-medium mb-1">
+                Match Overs
+              </label>
               <input
                 type="number"
                 placeholder="e.g. 20"
                 {...register("matchOvers", { valueAsNumber: true })}
                 className="w-full border p-2 rounded-md"
               />
-              {errors.matchOvers && <p className="text-red-500 text-sm">{errors.matchOvers.message}</p>}
+              {errors.matchOvers && (
+                <p className="text-red-500 text-sm">
+                  {errors.matchOvers.message}
+                </p>
+              )}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Desired Position</label>
+              <label className="block text-sm font-medium mb-1">
+                Desired Position
+              </label>
               <input
                 type="number"
                 placeholder="1-5"
-
                 {...register("desiredPosition", { valueAsNumber: true })}
                 className="w-full border p-2 rounded-md"
               />
-              {errors.desiredPosition && <p className="text-red-500 text-sm">{errors.desiredPosition.message}</p>}
+              {errors.desiredPosition && (
+                <p className="text-red-500 text-sm">
+                  {errors.desiredPosition.message}
+                </p>
+              )}
             </div>
           </div>
 
           {/* --- Toss and Runs --- */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Toss Result</label>
-              <select {...register("tossResult")} className="w-full border p-2 rounded-md">
+              <label className="block text-sm font-medium mb-1">
+                Toss Result
+              </label>
+              <select
+                {...register("tossResult")}
+                className="w-full border p-2 rounded-md"
+              >
                 <option value="">Choose...</option>
                 <option value="bat">Batting First</option>
                 <option value="bowl">Bowling First</option>
               </select>
-              {errors.tossResult && <p className="text-red-500 text-sm">{errors.tossResult.message}</p>}
+              {errors.tossResult && (
+                <p className="text-red-500 text-sm">
+                  {errors.tossResult.message}
+                </p>
+              )}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Runs Scored (or to Chase)</label>
+              <label className="block text-sm font-medium mb-1">
+                Runs Scored (or to Chase)
+              </label>
               <input
                 type="number"
                 placeholder="e.g. 120"
                 {...register("runsScored", { valueAsNumber: true })}
                 className="w-full border p-2 rounded-md"
               />
-              {errors.runsScored && <p className="text-red-500 text-sm">{errors.runsScored.message}</p>}
+              {errors.runsScored && (
+                <p className="text-red-500 text-sm">
+                  {errors.runsScored.message}
+                </p>
+              )}
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md"
+            disabled={isLoading}
+            className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md flex items-center justify-center"
           >
-            Calculate NRR Impact
+            {isLoading ? (
+              <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              "Calculate NRR Impact"
+            )}
           </button>
         </form>
       </div>
